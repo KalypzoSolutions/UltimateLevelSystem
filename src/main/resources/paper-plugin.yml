@@ -1,0 +1,4 @@
+name: LevelSystem
+version: '${version}'
+main: de.kalypzo.levelsystem.LevelSystem
+api-version: '1.21'
