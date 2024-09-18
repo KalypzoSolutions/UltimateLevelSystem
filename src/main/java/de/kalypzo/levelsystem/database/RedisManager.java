@@ -21,7 +21,7 @@ public class RedisManager {
     }
 
 
-    /**
+    /*
      * Connect to the Redis database
      */
     public void connect() {
@@ -29,7 +29,7 @@ public class RedisManager {
     }
 
 
-    /**
+    /*
      * Disconnect from the Redis database
      */
     public void disconnect() {
@@ -40,8 +40,12 @@ public class RedisManager {
     }
 
 
+
+
+
     /**
      * Read data from the Redis database asynchronously
+     *
      * @param key is the key to get the data from
      * @return the data from the key
      */
@@ -115,4 +119,11 @@ public class RedisManager {
     }
 
 
+    /**
+     * Get the Jedis object
+     * @return the Jedis object
+     */
+    public Jedis getJedis() {
+        return jedis;
+    }
 }
