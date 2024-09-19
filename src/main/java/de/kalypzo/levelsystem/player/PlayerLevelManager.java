@@ -21,12 +21,14 @@ public class PlayerLevelManager {
 
     /**
      * Gets the XP of the player
-     * @param uuid is the UUID of the player
+     *
+     * @param uuid          is the UUID of the player
      * @param levelCategory is the category of the level
      * @return the XP of the player
      */
     public int getXp(UUID uuid, LevelCategory levelCategory) {
-        if (getRedisManager().getJedis().exists("player:" + uuid + ":" + levelCategory.getName() + ":xp")){
+
+        if (getRedisManager().getJedis().exists("player:" + uuid + ":" + levelCategory.getName() + ":xp")) { // TODO: Ersetzen durch NullCheck.
             return Integer.parseInt(getRedisManager().getDataAsync("player:" + uuid + ":" + levelCategory.getName() + ":xp").join());
         } else {
             /*
@@ -39,49 +41,47 @@ public class PlayerLevelManager {
 
     /**
      * Adds XP to the player
-     * @param uuid is the UUID of the player
+     *
+     * @param uuid          is the UUID of the player
      * @param levelCategory is the category of the level
-     * @param xp is the XP to add
+     * @param xp            is the XP to add
      */
     public void addXp(UUID uuid, LevelCategory levelCategory, int xp) {
         int newXp = getXp(uuid, levelCategory) + xp;
         int currentLevel = getLevel(uuid, levelCategory);
         int xpForNextLevel = levelCategory.getXpForNextLevel(currentLevel);
-        while (true) {
-
-            if (newXp >= xpForNextLevel) {
-                int remainingXp = newXp - xpForNextLevel;
-                setXp(uuid, levelCategory, remainingXp);
-                setLevel(uuid, levelCategory, currentLevel + 1);
-                newXp = remainingXp;
-            } else {
-                setXp(uuid, levelCategory, newXp);
-                break;
-            }
+        while (newXp >= xpForNextLevel) {
+            int remainingXp = newXp - xpForNextLevel;
+            setLevel(uuid, levelCategory, currentLevel + 1);
+            xpForNextLevel = levelCategory.getXpForNextLevel(currentLevel + 1);
+            newXp = remainingXp;
         }
+        setXp(uuid, levelCategory, newXp);
     }
 
 
     /**
      * Sets the XP of the player
-     * @param uuid is the UUID of the player
+     *
+     * @param uuid          is the UUID of the player
      * @param levelCategory is the category of the level
-     * @param xp is the XP to set
+     * @param xp            is the XP to set
      */
     public void setXp(UUID uuid, LevelCategory levelCategory, int xp) {
-        if (getRedisManager().getJedis().exists("player:" + uuid + ":" + levelCategory.getName() + ":xp")){
-            getRedisManager().updateDataAsync("player:" + uuid + ":" + levelCategory.getName() + ":xp", String.valueOf(xp));
-        } else {
-            getRedisManager().setDataAsync("player:" + uuid + ":" + levelCategory.getName() + ":xp", String.valueOf(xp));
-        }
+        getRedisManager().setDataAsync("player:" + uuid + ":" + levelCategory.getName() + ":xp", String.valueOf(xp));
+        //if (getRedisManager().getJedis().exists("player:" + uuid + ":" + levelCategory.getName() + ":xp")) {
+        //    getRedisManager().updateDataAsync("player:" + uuid + ":" + levelCategory.getName() + ":xp", String.valueOf(xp)); // TODO: update und set ist beides set.
+        //} else {
+        //}
     }
 
 
     /**
      * Removes XP from the player
-     * @param uuid is the UUID of the player
+     *
+     * @param uuid          is the UUID of the player
      * @param levelCategory is the category of the level
-     * @param xp is the XP to remove
+     * @param xp            is the XP to remove
      */
     public void removeXp(UUID uuid, LevelCategory levelCategory, int xp) {
         int newXp = getXp(uuid, levelCategory) - xp;
@@ -94,13 +94,14 @@ public class PlayerLevelManager {
 
     /**
      * Gets the level of the player
-     * @param uuid is the UUID of the player
+     *
+     * @param uuid          is the UUID of the player
      * @param levelCategory is the category of the level
      * @return the level of the player
      */
     public int getLevel(UUID uuid, LevelCategory levelCategory) {
-        if (getRedisManager().getJedis().exists("player:" + uuid + ":" + levelCategory.getName() + ":level")){
-            return Integer.parseInt(getRedisManager().getDataAsync("player:" + uuid + ":" + levelCategory.getName() + ":level").join());
+        if (getRedisManager().getJedis().exists("player:" + uuid + ":" + levelCategory.getName() + ":level")) {
+            return Integer.parseInt(getRedisManager().getDataAsync("player:" + uuid + ":" + levelCategory.getName() + ":level").join()); // TODO Nullcheck
         } else {
             /*
             TODO: Add MongoDB support
@@ -112,24 +113,26 @@ public class PlayerLevelManager {
 
     /**
      * Sets the level of the player
-     * @param uuid is the UUID of the player
+     *
+     * @param uuid          is the UUID of the player
      * @param levelCategory is the category of the level
-     * @param level is the level to set
+     * @param level         is the level to set
      */
     public void setLevel(UUID uuid, LevelCategory levelCategory, int level) {
-        if (getRedisManager().getJedis().exists("player:" + uuid + ":" + levelCategory.getName() + ":level")){
-            getRedisManager().updateDataAsync("player:" + uuid + ":" + levelCategory.getName() + ":level", String.valueOf(level));
-        } else {
-            getRedisManager().setDataAsync("player:" + uuid + ":" + levelCategory.getName() + ":level", String.valueOf(level));
-        }
+        //if (getRedisManager().getJedis().exists("player:" + uuid + ":" + levelCategory.getName() + ":level")) {
+        //    getRedisManager().updateDataAsync("player:" + uuid + ":" + levelCategory.getName() + ":level", String.valueOf(level));
+        //} else {
+        //    getRedisManager().setDataAsync("player:" + uuid + ":" + levelCategory.getName() + ":level", String.valueOf(level));
+        //}
     }
 
 
     /**
      * Removes a level from the player
-     * @param uuid is the UUID of the player
+     *
+     * @param uuid          is the UUID of the player
      * @param levelCategory is the category of the level
-     * @param level is the level to remove
+     * @param level         is the level to remove
      */
     public void removeLevel(UUID uuid, LevelCategory levelCategory, int level) {
         int newLevel = getLevel(uuid, levelCategory) - level;
@@ -142,9 +145,10 @@ public class PlayerLevelManager {
 
     /**
      * Adds a level to the player
-     * @param uuid is the UUID of the player
+     *
+     * @param uuid          is the UUID of the player
      * @param levelCategory is the category of the level
-     * @param level is the level to add
+     * @param level         is the level to add
      */
     public void addLevel(UUID uuid, LevelCategory levelCategory, int level) {
         int newLevel = getLevel(uuid, levelCategory) + level;

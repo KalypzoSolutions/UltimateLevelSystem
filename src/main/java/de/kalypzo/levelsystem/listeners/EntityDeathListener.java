@@ -2,10 +2,8 @@ package de.kalypzo.levelsystem.listeners;
 
 import de.kalypzo.levelsystem.LevelSystem;
 import de.kalypzo.levelsystem.categorys.CombatLevel;
-import de.kalypzo.levelsystem.categorys.GatheringLevel;
 import de.kalypzo.levelsystem.categorys.LevelCategory;
 import de.kalypzo.levelsystem.player.PlayerLevelManager;
-import de.kalypzo.levelsystem.xp.XpManager;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
@@ -31,8 +29,10 @@ public class EntityDeathListener implements Listener {
             /*
              * Add XP to the player
              */
-            playerLevelManager.addXp(player.getUniqueId(), levelCategory, XpManager.getXpAmountByType(event.getEntity().getType().toString()));
-
+            Integer xp = plugin.getXpProvider().getXpAmountByType(event.getEntity().getType().toString());
+            if (xp != null) {
+                playerLevelManager.addXp(player.getUniqueId(), levelCategory, xp);
+            }
         }
 
     }
