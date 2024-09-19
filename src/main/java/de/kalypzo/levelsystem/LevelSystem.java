@@ -10,8 +10,6 @@ public final class LevelSystem extends JavaPlugin {
 
     private RedisManager redisManager;
     private PlayerLevelManager playerLevelManager;
-    private BlockBreakListener blockBreakListener;
-    private EntityDeathListener entityDeathListener;
 
     @Override
     public void onEnable() {
@@ -25,14 +23,12 @@ public final class LevelSystem extends JavaPlugin {
          * Initialize the Classes
          */
         playerLevelManager = new PlayerLevelManager(this);
-        blockBreakListener = new BlockBreakListener(this);
-        entityDeathListener = new EntityDeathListener(this);
 
         /*
          * Register the Listeners
          */
-        getServer().getPluginManager().registerEvents(blockBreakListener, this);
-        getServer().getPluginManager().registerEvents(entityDeathListener, this);
+        getServer().getPluginManager().registerEvents(new BlockBreakListener(this), this);
+        getServer().getPluginManager().registerEvents(new EntityDeathListener(this), this);
 
 
     }
