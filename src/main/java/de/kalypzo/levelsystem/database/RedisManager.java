@@ -89,23 +89,6 @@ public class RedisManager {
 
 
     /**
-     * Update data in the Redis database asynchronously
-     * @param key is the key to update the data from
-     * @param value is the new data to update
-     * @return a CompletableFuture<Void> to indicate the completion of the operation
-     */
-    public CompletableFuture<Void> updateDataAsync(String key, String value) {
-        return CompletableFuture.runAsync(() -> {
-            if (jedis.exists(key)) {
-                jedis.set(key, value);
-            } else {
-                System.out.println("No data found for key: " + key);
-            }
-        }, executorService);
-    }
-
-
-    /**
      * Set multiple data in the Redis database asynchronously
      * @param dataMap is the map of keys and values to set
      * @return a CompletableFuture<Void> to indicate the completion of the operation
