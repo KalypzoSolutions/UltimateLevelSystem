@@ -1,12 +1,10 @@
 package de.kalypzo.levelsystem.categorys;
 
-public class CombatLevel implements LevelCategory{
-    private final int baseXp;
-    private final double xpMultiplier;
+public class CombatLevel implements LevelCategory {
+    private final LevelFormula levelFormula;
 
-    public CombatLevel() {
-        this.baseXp = 1000;
-        this.xpMultiplier = 10;
+    public CombatLevel(LevelFormula levelFormula) {
+        this.levelFormula = levelFormula;
     }
 
     @Override
@@ -16,7 +14,10 @@ public class CombatLevel implements LevelCategory{
 
     @Override
     public int getXpForNextLevel(int currentLevel) {
-        return (int) (baseXp * Math.pow(1 + xpMultiplier, currentLevel - 1));
+        return levelFormula.getXpForNextLevel(currentLevel);
     }
 }
+
+
+
 

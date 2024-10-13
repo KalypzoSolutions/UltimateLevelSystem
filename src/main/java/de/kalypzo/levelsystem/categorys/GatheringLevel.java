@@ -1,12 +1,10 @@
 package de.kalypzo.levelsystem.categorys;
 
-public class GatheringLevel implements LevelCategory{
-    private final int baseXp;
-    private final double xpMultiplier;
+public class GatheringLevel implements LevelCategory {
+    private final LevelFormula levelFormula;
 
-    public GatheringLevel() {
-        this.baseXp = 1000;
-        this.xpMultiplier = 10;
+    public GatheringLevel(LevelFormula levelFormula) {
+        this.levelFormula = levelFormula;
     }
 
     @Override
@@ -16,6 +14,6 @@ public class GatheringLevel implements LevelCategory{
 
     @Override
     public int getXpForNextLevel(int currentLevel) {
-        return (int) (baseXp * Math.pow(1 + xpMultiplier, currentLevel - 1));
+        return levelFormula.getXpForNextLevel(currentLevel);
     }
 }
